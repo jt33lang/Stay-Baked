@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import FloatingCartButton from './components/FloatingCartButton';
 import Home from './pages/Home';
 import Subscription from './pages/Subscription';
 import Product from './pages/Product';
@@ -21,7 +22,7 @@ export default function App() {
   return (
     <CartProvider>
       <Router>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col relative">
           <ScrollToTop />
           <Navbar />
           <main className="flex-grow">
@@ -35,6 +36,7 @@ export default function App() {
               <Route path="/contact" element={<Contact />} />
             </Routes>
           </main>
+          <FloatingCartButton />
           <Footer />
         </div>
       </Router>

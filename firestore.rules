@@ -22,16 +22,19 @@ service cloud.firestore {
 
     // Validation for Order entity
     function isValidOrder(data) {
-      return data.keys().hasAll(['firstName', 'lastName', 'address', 'mobileNumber', 'postalCode', 'quantity', 'totalAmount', 'status', 'createdAt'])
-        && (data.keys().size() == 9 || (data.keys().size() == 10 && data.keys().hasAll(['deliveryInstructions'])))
+      return data.keys().hasAll(['firstName', 'lastName', 'address', 'mobileNumber', 'postalCode', 'subscribeMonthly', 'quantity', 'totalAmount', 'plan', 'planName', 'status', 'createdAt'])
+        && (data.keys().size() == 12 || (data.keys().size() == 13 && data.keys().hasAll(['deliveryInstructions'])))
         && data.firstName is string && data.firstName.size() <= 100
         && data.lastName is string && data.lastName.size() <= 100
         && data.address is string && data.address.size() <= 500
         && data.mobileNumber is string && data.mobileNumber.size() <= 20
         && data.postalCode is string && data.postalCode.size() <= 10
         && (!data.keys().hasAll(['deliveryInstructions']) || (data.deliveryInstructions is string && data.deliveryInstructions.size() <= 1000))
+        && data.subscribeMonthly is bool
         && data.quantity is number && data.quantity > 0
         && data.totalAmount is number && data.totalAmount >= 0
+        && data.plan is string && data.plan.size() <= 100
+        && data.planName is string && data.planName.size() <= 200
         && data.status in ['pending', 'verified', 'delivered']
         && data.createdAt == request.time;
     }

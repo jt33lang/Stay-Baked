@@ -11,12 +11,15 @@
         "mobileNumber": { "type": "string", "description": "Customer's mobile number" },
         "postalCode": { "type": "string", "description": "Postal code" },
         "deliveryInstructions": { "type": "string", "description": "Optional instructions" },
+        "subscribeMonthly": { "type": "boolean", "description": "Whether the user opted to subscribe monthly" },
         "quantity": { "type": "number", "description": "Quantity of sourdough" },
         "totalAmount": { "type": "number", "description": "Total amount paid" },
+        "plan": { "type": "string", "description": "The selected plan identifier" },
+        "planName": { "type": "string", "description": "The human-readable plan name" },
         "status": { "type": "string", "enum": ["pending", "verified", "delivered"], "description": "Order status" },
         "createdAt": { "type": "string", "format": "date-time", "description": "Order creation time" }
       },
-      "required": ["firstName", "lastName", "address", "mobileNumber", "postalCode", "quantity", "totalAmount", "status", "createdAt"]
+      "required": ["firstName", "lastName", "address", "mobileNumber", "postalCode", "subscribeMonthly", "quantity", "totalAmount", "plan", "planName", "status", "createdAt"]
     },
     "NewsletterSubscription": {
       "title": "Newsletter Subscription",
