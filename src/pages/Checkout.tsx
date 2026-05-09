@@ -64,6 +64,7 @@ export default function Checkout() {
     const ordersPath = 'orders';
 
     try {
+      console.log('Attempting to place order...', { orderId, quantity, subtotal });
       await setDoc(doc(db, ordersPath, orderId), {
         ...formData,
         quantity,
@@ -71,8 +72,11 @@ export default function Checkout() {
         status: 'pending',
         createdAt: serverTimestamp()
       });
+      console.log('Order successfully placed in Firestore');
       setShowModal(true);
     } catch (error) {
+      console.error('Order placement failed:', error);
+      alert('Failed to place order. Please check your internet connection or try again later.');
       handleFirestoreError(error, OperationType.WRITE, ordersPath);
     } finally {
       setIsSubmitting(false);
