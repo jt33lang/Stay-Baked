@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Validation for Order entity
+    function isValidOrder(data) {
+      return data.keys().hasAll(['firstName', 'lastName', 'address', 'mobileNumber', 'postalCode', 'quantity', 'totalAmount', 'status', 'createdAt'])
+        && data.keys().size() == 9
+        && data.firstName is string && data.firstName.size() <= 100
+        && data.lastName is string && data.lastName.size() <= 100
+        && data.address is string && data.address.size() <= 500
+        && data.mobileNumber is string && data.mobileNumber.size() <= 20
+        && data.postalCode is string && data.postalCode.size() <= 10
+        && (data.deliveryInstructions == null || (data.deliveryInstructions is string && data.deliveryInstructions.size() <= 1000))
+        && data.quantity is number && data.quantity > 0
+        && data.totalAmount is number && data.totalAmount >= 0
+        && data.status in ['pending', 'verified', 'delivered']
+        && data.createdAt == request.time;
+    }
+
+    // Orders collection
+    match /orders/{orderId} {
+      // Anyone can create an order (public checkout)
+      allow create: if isValidId(orderId) && isValidOrder(incoming());
+      
+      // Reading orders should be restricted. For now, let's keep it restricted. 
+      // The user can view them in the Firebase console using the link provided in the summary.
+      allow read, update, delete: if false; 
+    }
+  }
+}

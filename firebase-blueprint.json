@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "An order placed by a customer",
+      "type": "object",
+      "properties": {
+        "firstName": { "type": "string", "description": "Customer's first name" },
+        "lastName": { "type": "string", "description": "Customer's last name" },
+        "address": { "type": "string", "description": "Delivery address" },
+        "mobileNumber": { "type": "string", "description": "Customer's mobile number" },
+        "postalCode": { "type": "string", "description": "Postal code" },
+        "deliveryInstructions": { "type": "string", "description": "Optional instructions" },
+        "quantity": { "type": "number", "description": "Quantity of sourdough" },
+        "totalAmount": { "type": "number", "description": "Total amount paid" },
+        "status": { "type": "string", "enum": ["pending", "verified", "delivered"], "description": "Order status" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Order creation time" }
+      },
+      "required": ["firstName", "lastName", "address", "mobileNumber", "postalCode", "quantity", "totalAmount", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "orders": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Collection of customer orders"
+    }
+  }
+}

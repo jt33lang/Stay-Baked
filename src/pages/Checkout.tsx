@@ -1,11 +1,58 @@
-import { motion } from 'motion/react';
-import { Truck, Lock, Smartphone, ArrowRight, ShieldCheck, Plus, Minus } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Truck, Lock, Smartphone, ArrowRight, ShieldCheck, Plus, Minus, CheckCircle2, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import React, { useState } from 'react';
+import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 
 export default function Checkout() {
   const { quantity, setQuantity } = useCart();
   const unitPrice = 8.50;
   const subtotal = quantity * unitPrice;
+
+  // Form State
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    address: '',
+    mobileNumber: '',
+    postalCode: '',
+    deliveryInstructions: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePlaceOrder = async () => {
+    if (!formData.firstName || !formData.lastName || !formData.address || !formData.mobileNumber || !formData.postalCode) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    const orderId = `order_${Date.now()}`;
+    const ordersPath = 'orders';
+
+    try {
+      await setDoc(doc(db, ordersPath, orderId), {
+        ...formData,
+        quantity,
+        totalAmount: subtotal,
+        status: 'pending',
+        createdAt: serverTimestamp()
+      });
+      setShowModal(true);
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, ordersPath);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="pt-24 max-w-6xl mx-auto px-6 md:px-12 pb-24">
@@ -25,27 +72,68 @@ export default function Checkout() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">First Name</label>
-                <input type="text" placeholder="Jane" className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                <input 
+                  type="text" 
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="Jane" 
+                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Last Name</label>
-                <input type="text" placeholder="Doe" className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                <input 
+                  type="text" 
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Doe" 
+                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                />
               </div>
               <div className="flex flex-col gap-2 md:col-span-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Steet Address (Unit No / Building)</label>
-                <input type="text" placeholder="123 Bakery Lane, #05-12" className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                <input 
+                  type="text" 
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  placeholder="123 Bakery Lane, #05-12" 
+                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Mobile Number</label>
-                <input type="text" placeholder="9123 4567" className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                <input 
+                  type="text" 
+                  name="mobileNumber"
+                  value={formData.mobileNumber}
+                  onChange={handleInputChange}
+                  placeholder="9123 4567" 
+                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Postal Code</label>
-                <input type="text" placeholder="123456" className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                <input 
+                  type="text" 
+                  name="postalCode"
+                  value={formData.postalCode}
+                  onChange={handleInputChange}
+                  placeholder="123456" 
+                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                />
               </div>
               <div className="flex flex-col gap-2 md:col-span-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Delivery Instructions (Optional)</label>
-                <textarea placeholder="Leave at the gate / Press doorbell" className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all min-h-[100px]" />
+                <textarea 
+                  name="deliveryInstructions"
+                  value={formData.deliveryInstructions}
+                  onChange={handleInputChange}
+                  placeholder="Leave at the gate / Press doorbell" 
+                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all min-h-[100px]" 
+                />
               </div>
             </div>
           </section>
@@ -139,8 +227,12 @@ export default function Checkout() {
               <span className="text-4xl font-black text-primary">${subtotal.toFixed(2)}</span>
             </div>
 
-            <button className="w-full bg-primary text-background-dark font-black py-6 rounded-2xl flex items-center justify-center gap-3 text-xl hover:brightness-110 shadow-2xl shadow-primary/20 transition-all active:scale-[0.98]">
-              Place Order <ArrowRight size={24} />
+            <button 
+              onClick={handlePlaceOrder}
+              disabled={isSubmitting}
+              className="w-full bg-primary text-background-dark font-black py-6 rounded-2xl flex items-center justify-center gap-3 text-xl hover:brightness-110 shadow-2xl shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'Placing Order...' : 'Place Order'} <ArrowRight size={24} />
             </button>
 
             <div className="text-center space-y-4">
@@ -155,6 +247,57 @@ export default function Checkout() {
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <AnimatePresence>
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowModal(false)}
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white w-full max-w-lg p-12 rounded-[40px] shadow-2xl text-center flex flex-col items-center gap-8"
+            >
+              <button 
+                onClick={() => setShowModal(false)}
+                className="absolute top-8 right-8 text-slate-300 hover:text-slate-900 transition-colors"
+              >
+                <X size={24} />
+              </button>
+
+              <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center text-background-dark shadow-xl">
+                <CheckCircle2 size={48} />
+              </div>
+
+              <div>
+                <h3 className="text-3xl font-black mb-4">Order Received!</h3>
+                <p className="text-xl text-slate-600 leading-relaxed font-medium">
+                  Thank you for your support! Every dough is promised to be made with love :)
+                </p>
+              </div>
+
+              <div className="w-full bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col gap-2">
+                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Next Steps</p>
+                <p className="text-slate-600">Please complete the PayNow payment to verify your order. We'll send a WhatsApp notification once verified!</p>
+              </div>
+
+              <button 
+                onClick={() => setShowModal(false)}
+                className="w-full bg-slate-900 text-white font-black py-4 rounded-xl hover:brightness-125 transition-all"
+              >
+                Back to Home
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
