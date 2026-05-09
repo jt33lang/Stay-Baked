@@ -90,7 +90,7 @@ export default function Subscription() {
                   </li>
                 ))}
               </ul>
-              <Link to="/checkout" className="w-full bg-primary text-background-dark font-black py-5 rounded-2xl flex items-center justify-center gap-3 group text-center block">
+              <Link to="/checkout?plan=solo" className="w-full bg-primary text-background-dark font-black py-5 rounded-2xl flex items-center justify-center gap-3 group text-center block">
                 Subscribe Now <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
               </Link>
             </motion.div>
@@ -121,7 +121,7 @@ export default function Subscription() {
                   </li>
                 ))}
               </ul>
-              <Link to="/checkout" className="w-full bg-primary text-background-dark font-black py-5 rounded-2xl flex items-center justify-center gap-3 group text-center block">
+              <Link to="/checkout?plan=family" className="w-full bg-primary text-background-dark font-black py-5 rounded-2xl flex items-center justify-center gap-3 group text-center block">
                 Subscribe Now <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
               </Link>
             </motion.div>

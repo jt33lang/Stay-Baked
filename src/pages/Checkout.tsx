@@ -1,14 +1,23 @@
 import { motion, AnimatePresence } from 'motion/react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Truck, Lock, Smartphone, ArrowRight, ShieldCheck, Plus, Minus, CheckCircle2, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 
 export default function Checkout() {
+  const [searchParams] = useSearchParams();
+  const plan = searchParams.get('plan');
+  
   const { quantity, setQuantity } = useCart();
-  const unitPrice = 8.50;
-  const subtotal = quantity * unitPrice;
+  
+  const isSubscription = plan === 'solo' || plan === 'family';
+  const planName = plan === 'family' ? 'The Family Subscription' : plan === 'solo' ? 'The Solo Subscription' : 'The Classic Sourdough';
+  const planPrice = plan === 'family' ? 28.00 : plan === 'solo' ? 8.50 : 8.50;
+  
+  const unitPrice = planPrice;
+  const subtotal = isSubscription ? planPrice : quantity * unitPrice;
 
   // Form State
   const [formData, setFormData] = useState({
@@ -17,16 +26,25 @@ export default function Checkout() {
     address: '',
     mobileNumber: '',
     postalCode: '',
-    deliveryInstructions: ''
+    deliveryInstructions: '',
+    subscribeMonthly: isSubscription
   });
+
+  useEffect(() => {
+    if (isSubscription) {
+      setFormData(prev => ({ ...prev, subscribeMonthly: true }));
+    }
+  }, [isSubscription]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target as HTMLInputElement;
+    const val = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+    
+    setFormData(prev => ({ ...prev, [name]: val }));
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => {
@@ -75,8 +93,10 @@ export default function Checkout() {
       console.log('Attempting to place order...', { orderId, quantity, subtotal });
       await setDoc(doc(db, ordersPath, orderId), {
         ...formData,
-        quantity,
+        quantity: isSubscription ? 1 : quantity,
         totalAmount: subtotal,
+        plan: plan || 'one-time',
+        planName,
         status: 'pending',
         createdAt: serverTimestamp()
       });
@@ -233,28 +253,36 @@ export default function Checkout() {
                   />
                 </div>
                 <div>
-                  <p className="font-black text-lg">The Classic Sourdough</p>
+                  <p className="font-black text-lg">{planName}</p>
                   <div className="flex items-center gap-3 mt-1">
-                    <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg overflow-hidden h-8">
-                      <button 
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="px-2 hover:bg-primary/10 text-primary transition-colors border-r border-slate-200"
-                      >
-                        <Minus size={14} />
-                      </button>
-                      <span className="px-3 text-sm font-black min-w-[30px] text-center">{quantity}</span>
-                      <button 
-                        onClick={() => setQuantity(quantity + 1)}
-                        className="px-2 hover:bg-primary/10 text-primary transition-colors border-l border-slate-200"
-                      >
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                    <p className="text-slate-400 text-sm">unit{quantity > 1 ? 's' : ''} • ${unitPrice.toFixed(2)}</p>
+                    {!isSubscription ? (
+                      <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg overflow-hidden h-8">
+                        <button 
+                          onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                          className="px-2 hover:bg-primary/10 text-primary transition-colors border-r border-slate-200"
+                        >
+                          <Minus size={14} />
+                        </button>
+                        <span className="px-3 text-sm font-black min-w-[30px] text-center">{quantity}</span>
+                        <button 
+                          onClick={() => setQuantity(quantity + 1)}
+                          className="px-2 hover:bg-primary/10 text-primary transition-colors border-l border-slate-200"
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded">SUBSCRIPTION</span>
+                    )}
+                    <p className="text-slate-400 text-sm">
+                      {isSubscription ? 'Fixed Plan' : `unit${quantity > 1 ? 's' : ''}`} • ${unitPrice.toFixed(2)}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="bg-primary/20 text-primary text-[10px] font-bold px-2 py-0.5 rounded tracking-tighter">PROMO</span>
-                    <span className="text-slate-300 line-through text-[10px]">$10.00 retail</span>
+                    <span className="text-slate-300 line-through text-[10px]">
+                      ${(isSubscription ? (plan === 'family' ? 34.00 : 10.00) : 10.00).toFixed(2)} retail
+                    </span>
                   </div>
                 </div>
               </div>
@@ -280,6 +308,25 @@ export default function Checkout() {
               <span className="text-2xl font-black">Total</span>
               <span className="text-4xl font-black text-primary">${subtotal.toFixed(2)}</span>
             </div>
+
+            {/* Subscription Prompt */}
+            {!isSubscription && (
+              <div className="bg-primary/10 p-6 rounded-3xl border border-primary/20 space-y-4">
+                <div className="space-y-2">
+                  <h4 className="font-bold text-slate-900">Want regular fresh bakes?</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed italic">
+                    Get fresh Sourdough for 1 month and save 18%. Weekly Delivery. Minimum commitment for 1 month only.
+                  </p>
+                </div>
+                <Link 
+                  to="/checkout?plan=family"
+                  className="w-full bg-white border-2 border-primary text-slate-900 py-3.5 rounded-xl font-black text-sm flex items-center justify-center gap-2 hover:bg-primary/10 transition-all shadow-sm"
+                >
+                  Subscribe to Monthly Plan (1 Month)
+                  <ArrowRight size={16} />
+                </Link>
+              </div>
+            )}
 
             <button 
               onClick={handlePlaceOrder}
