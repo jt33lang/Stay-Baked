@@ -22,15 +22,40 @@ export default function Checkout() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handlePlaceOrder = async () => {
-    if (!formData.firstName || !formData.lastName || !formData.address || !formData.mobileNumber || !formData.postalCode) {
-      alert('Please fill in all required fields.');
+    const newErrors: Record<string, string> = {};
+    const requiredFields = ['firstName', 'lastName', 'address', 'mobileNumber', 'postalCode'];
+    
+    requiredFields.forEach(field => {
+      const value = formData[field as keyof typeof formData];
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        newErrors[field] = 'This field is required';
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Scroll to the first error
+      const firstErrorField = Object.keys(newErrors)[0];
+      const element = document.getElementsByName(firstErrorField)[0];
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 
@@ -69,6 +94,18 @@ export default function Checkout() {
             <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
               <Truck className="text-primary" /> Delivery Address & Details
             </h2>
+            
+            {Object.keys(errors).length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-8 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-600"
+              >
+                <X className="shrink-0" size={20} />
+                <p className="text-sm font-bold">Please correct the highlighted fields before placing your order.</p>
+              </motion.div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">First Name</label>
@@ -78,8 +115,9 @@ export default function Checkout() {
                   value={formData.firstName}
                   onChange={handleInputChange}
                   placeholder="Jane" 
-                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                  className={`bg-white border ${errors.firstName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'} rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all`} 
                 />
+                {errors.firstName && <span className="text-xs font-bold text-red-500 mt-1">{errors.firstName}</span>}
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Last Name</label>
@@ -89,8 +127,9 @@ export default function Checkout() {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   placeholder="Doe" 
-                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                  className={`bg-white border ${errors.lastName ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'} rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all`} 
                 />
+                {errors.lastName && <span className="text-xs font-bold text-red-500 mt-1">{errors.lastName}</span>}
               </div>
               <div className="flex flex-col gap-2 md:col-span-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Steet Address (Unit No / Building)</label>
@@ -100,8 +139,9 @@ export default function Checkout() {
                   value={formData.address}
                   onChange={handleInputChange}
                   placeholder="123 Bakery Lane, #05-12" 
-                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                  className={`bg-white border ${errors.address ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'} rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all`} 
                 />
+                {errors.address && <span className="text-xs font-bold text-red-500 mt-1">{errors.address}</span>}
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Mobile Number</label>
@@ -111,8 +151,9 @@ export default function Checkout() {
                   value={formData.mobileNumber}
                   onChange={handleInputChange}
                   placeholder="9123 4567" 
-                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                  className={`bg-white border ${errors.mobileNumber ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'} rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all`} 
                 />
+                {errors.mobileNumber && <span className="text-xs font-bold text-red-500 mt-1">{errors.mobileNumber}</span>}
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Postal Code</label>
@@ -122,8 +163,9 @@ export default function Checkout() {
                   value={formData.postalCode}
                   onChange={handleInputChange}
                   placeholder="123456" 
-                  className="bg-white border border-slate-200 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" 
+                  className={`bg-white border ${errors.postalCode ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'} rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all`} 
                 />
+                {errors.postalCode && <span className="text-xs font-bold text-red-500 mt-1">{errors.postalCode}</span>}
               </div>
               <div className="flex flex-col gap-2 md:col-span-2">
                 <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Delivery Instructions (Optional)</label>
