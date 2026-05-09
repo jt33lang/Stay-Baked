@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Subscription from './pages/Subscription';
 import Product from './pages/Product';
 import Checkout from './pages/Checkout';
+import Contact from './pages/Contact';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -29,9 +30,9 @@ export default function App() {
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/shop" element={<Product />} />
               <Route path="/checkout" element={<Checkout />} />
-              {/* Fallback routes to show something for now */}
+              {/* Fallback routes */}
               <Route path="/story" element={<Home />} />
-              <Route path="/contact" element={<Home />} />
+              <Route path="/contact" element={<Contact />} />
             </Routes>
           </main>
           <Footer />

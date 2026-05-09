@@ -44,6 +44,18 @@ service cloud.firestore {
         && data.createdAt == request.time;
     }
 
+    // Validation for ContactMessage entity
+    function isValidContactMessage(data) {
+      return data.keys().hasAll(['name', 'email', 'contactNumber', 'reason', 'createdAt'])
+        && (data.keys().size() == 5 || (data.keys().size() == 6 && data.keys().hasAll(['message'])))
+        && data.name is string && data.name.size() <= 200
+        && data.email is string && data.email.size() <= 200 && data.email.matches('.+@.+\\..+')
+        && data.contactNumber is string && data.contactNumber.size() <= 50
+        && data.reason is string && data.reason.size() <= 200
+        && (!data.keys().hasAll(['message']) || (data.message is string && data.message.size() <= 5000))
+        && data.createdAt == request.time;
+    }
+
     // Orders collection
     match /orders/{orderId} {
       // Anyone can create an order (public checkout)
@@ -58,6 +70,13 @@ service cloud.firestore {
     match /newsletter_subscriptions/{subscriptionId} {
       // Anyone can subscribe
       allow create: if isValidId(subscriptionId) && isValidNewsletterSubscription(incoming());
+      allow read, update, delete: if false;
+    }
+
+    // Contact messages collection
+    match /contact_messages/{messageId} {
+      // Anyone can send a message
+      allow create: if isValidId(messageId) && isValidContactMessage(incoming());
       allow read, update, delete: if false;
     }
   }

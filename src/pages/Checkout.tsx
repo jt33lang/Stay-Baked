@@ -48,6 +48,14 @@ export default function Checkout() {
       }
     });
 
+    // Format validation
+    if (formData.mobileNumber && !/^\d{8}$/.test(formData.mobileNumber.trim())) {
+      newErrors.mobileNumber = 'Mobile number must be exactly 8 digits without spaces';
+    }
+    if (formData.postalCode && !/^\d{6}$/.test(formData.postalCode.trim())) {
+      newErrors.postalCode = 'Postal code must be exactly 6 digits';
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       // Scroll to the first error
@@ -154,7 +162,7 @@ export default function Checkout() {
                   name="mobileNumber"
                   value={formData.mobileNumber}
                   onChange={handleInputChange}
-                  placeholder="9123 4567" 
+                  placeholder="91234567" 
                   className={`bg-white border ${errors.mobileNumber ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'} rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all`} 
                 />
                 {errors.mobileNumber && <span className="text-xs font-bold text-red-500 mt-1">{errors.mobileNumber}</span>}
@@ -259,7 +267,7 @@ export default function Checkout() {
                 <span className="font-bold text-slate-900">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-500">
-                <span>Shipping</span>
+                <span>Delivery Charges</span>
                 <span className="font-bold text-slate-900">$0.00 (waived)</span>
               </div>
               <div className="flex justify-between text-slate-500">

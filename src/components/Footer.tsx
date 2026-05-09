@@ -45,7 +45,7 @@ export default function Footer() {
                 <path d="M15 15a4 4 0 0 1-5.14 0M12 12v3M9 10c0-1.65 1.35-3 3-3s3 1.35 3 3M4 10c0-1.65 1.35-3 3-3M17 10c0-1.65 1.35-3 3-3M4 10h16M4 10v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10" />
               </svg>
             </div>
-            <h2 className="text-xl font-bold">Stay Baked Sourdough</h2>
+            <h2 className="text-xl font-bold text-primary">Stay Baked Sourdough</h2>
           </Link>
           <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
             Small-batch organic bakery dedicated to the ancient craft of sourdough fermentation.
@@ -56,10 +56,9 @@ export default function Footer() {
         <div className="flex flex-col gap-6">
           <h3 className="font-bold text-primary uppercase tracking-wider text-sm">Quick Links</h3>
           <nav className="flex flex-col gap-3 text-slate-400 text-sm">
-            <Link to="/process" className="hover:text-white transition-colors">Our Baking Process</Link>
-            <Link to="/login" className="hover:text-white transition-colors">Subscription Login</Link>
-            <Link to="/gifts" className="hover:text-white transition-colors">Gifting Options</Link>
-            <Link to="/shipping" className="hover:text-white transition-colors">Shipping Policy</Link>
+            <Link to="/story" className="hover:text-white transition-colors">Our Story</Link>
+            <Link to="/subscription" className="hover:text-white transition-colors">Subscription</Link>
+            <Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link>
           </nav>
         </div>
 

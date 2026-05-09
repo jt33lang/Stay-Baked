@@ -27,6 +27,20 @@
         "createdAt": { "type": "string", "format": "date-time", "description": "Subscription time" }
       },
       "required": ["email", "createdAt"]
+    },
+    "ContactMessage": {
+      "title": "Contact Message",
+      "description": "A message from a customer via the contact form",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Customer name" },
+        "email": { "type": "string", "format": "email", "description": "Customer email" },
+        "contactNumber": { "type": "string", "description": "Customer contact number" },
+        "reason": { "type": "string", "description": "Reason for contacting" },
+        "message": { "type": "string", "description": "The message body" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Time the message was sent" }
+      },
+      "required": ["name", "email", "contactNumber", "reason", "createdAt"]
     }
   },
   "firestore": {
@@ -37,6 +51,10 @@
     "newsletter_subscriptions": {
       "schema": { "$ref": "#/entities/NewsletterSubscription" },
       "description": "Collection of newsletter signups"
+    },
+    "contact_messages": {
+      "schema": { "$ref": "#/entities/ContactMessage" },
+      "description": "Collection of contact form submissions"
     }
   }
 }
