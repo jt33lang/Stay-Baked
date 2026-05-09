@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@400;500;600;700&display=swap');
+
+@theme {
+  --font-display: "Newsreader", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #f4c025;
+  --color-background-light: #f8f8f5;
+  --color-background-dark: #221e10;
+}
+
+@layer base {
+  body {
+    @apply bg-background-light text-slate-900 font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-slate-900;
+  }
+}
+
+.markdown-body {
+  @apply font-sans leading-relaxed;
+}
