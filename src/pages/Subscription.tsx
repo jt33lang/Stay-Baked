@@ -42,7 +42,7 @@ export default function Subscription() {
           {[
             { icon: Truck, title: 'Never Run Out', desc: 'Fresh, organic sourdough arrives at your doorstep every single week, guaranteed.' },
             { icon: Tag, title: 'Save 18%', desc: 'Subscribers always pay 18% less than one-time retail prices on every single order.' },
-            { icon: CalendarIcon, title: 'Total Flexibility', desc: 'Life happens. Pause, skip weeks, or cancel your plan at any time with one click.' },
+            { icon: CalendarIcon, title: 'Total Flexibility', desc: 'Life Happens. Minimum commitment is 1 month. Pause anytime.' },
           ].map((item, i) => (
             <motion.div 
               key={i}
@@ -164,12 +164,12 @@ export default function Subscription() {
         <h3 className="text-3xl font-black mb-12 text-center">Frequently Asked Questions</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div>
-            <h4 className="text-xl font-bold mb-4">Can I skip a week?</h4>
-            <p className="text-slate-600 leading-relaxed">Yes! Just log into your dashboard and hit 'Skip' at least 48 hours before your delivery day.</p>
+            <h4 className="text-xl font-bold mb-4">Can I change my delivery day or address?</h4>
+            <p className="text-slate-600 leading-relaxed">Yes. Please Contact us at +65 93430453. We seek your understanding that we are a small home-based bakery and will do our best to adjust accordingly.</p>
           </div>
           <div>
             <h4 className="text-xl font-bold mb-4">What time is delivery?</h4>
-            <p className="text-slate-600 leading-relaxed">We deliver between 7:00 AM and 10:00 AM to ensure you have fresh bread for your breakfast or lunch.</p>
+            <p className="text-slate-600 leading-relaxed">We deliver between 6:00 AM and 10:30 AM to ensure you have fresh bread for your breakfast or lunch.</p>
           </div>
         </div>
       </section>

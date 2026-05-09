@@ -36,6 +36,14 @@ service cloud.firestore {
         && data.createdAt == request.time;
     }
 
+    // Validation for NewsletterSubscription entity
+    function isValidNewsletterSubscription(data) {
+      return data.keys().hasAll(['email', 'createdAt'])
+        && data.keys().size() == 2
+        && data.email is string && data.email.size() <= 200 && data.email.matches('.+@.+\\..+')
+        && data.createdAt == request.time;
+    }
+
     // Orders collection
     match /orders/{orderId} {
       // Anyone can create an order (public checkout)
@@ -44,6 +52,13 @@ service cloud.firestore {
       // Reading orders should be restricted. For now, let's keep it restricted. 
       // The user can view them in the Firebase console using the link provided in the summary.
       allow read, update, delete: if false; 
+    }
+
+    // Newsletter subscriptions collection
+    match /newsletter_subscriptions/{subscriptionId} {
+      // Anyone can subscribe
+      allow create: if isValidId(subscriptionId) && isValidNewsletterSubscription(incoming());
+      allow read, update, delete: if false;
     }
   }
 }

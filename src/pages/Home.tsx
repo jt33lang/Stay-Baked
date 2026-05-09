@@ -115,8 +115,8 @@ export default function Home() {
             <div className="space-y-4">
               {[
                 'Fresh Bread Always: Scheduled deliveries mean bread for breakfast.',
-                '18% Permanent Discount: Always cheaper than one-off orders.',
-                'Easy Management: Pause, skip, or cancel anytime with one click.'
+                'Easy Subscription: Buy once for 4 weeks.',
+                'Subscribe and Enjoy.'
               ].map((item, i) => (
                 <div key={i} className="flex gap-4 items-start text-white/90">
                   <CheckCircle2 size={24} className="text-primary shrink-0" />

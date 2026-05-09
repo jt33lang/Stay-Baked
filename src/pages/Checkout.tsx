@@ -136,7 +136,7 @@ export default function Checkout() {
                 {errors.lastName && <span className="text-xs font-bold text-red-500 mt-1">{errors.lastName}</span>}
               </div>
               <div className="flex flex-col gap-2 md:col-span-2">
-                <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Steet Address (Unit No / Building)</label>
+                <label className="text-sm font-bold text-slate-500 uppercase tracking-wider">Street Address (Unit No / Building)</label>
                 <input 
                   type="text" 
                   name="address"
@@ -203,7 +203,7 @@ export default function Checkout() {
                   <p className="text-3xl font-black text-slate-900 tracking-tight">+65 9343 0453</p>
                 </div>
                 <p className="mt-6 text-sm text-slate-500 italic">
-                  *Please include your name in the payment reference. We will bake your order once payment is verified.
+                  *Please ensure to include your name (same as the information above in the Delivery Details). We will bake your order once payment is verified.
                 </p>
               </div>
             </div>
