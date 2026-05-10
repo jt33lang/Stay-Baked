@@ -226,9 +226,17 @@ export default function Checkout() {
                 <p className="text-slate-600 leading-relaxed mb-6">
                    Please PayNow or PayLah! to the following mobile number:
                 </p>
-                <div className="bg-white p-6 rounded-2xl border-2 border-primary border-dashed shadow-sm">
-                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Mobile Number</p>
-                  <p className="text-3xl font-black text-slate-900 tracking-tight">+65 9343 0453</p>
+                <div className="bg-white p-8 rounded-3xl border-2 border-primary border-dashed shadow-sm flex flex-col items-center gap-6">
+                  <img 
+                    src="https://lh3.googleusercontent.com/d/1NU6_KvIJqJBW_fu0T3wqn3bJTdz0Jrt0" 
+                    alt="PayNow QR Code" 
+                    className="w-64 h-64 object-contain rounded-xl"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="text-center">
+                    <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Mobile Number</p>
+                    <p className="text-3xl font-black text-slate-900 tracking-tight">+65 9343 0453</p>
+                  </div>
                 </div>
                 <p className="mt-6 text-sm text-slate-500 italic">
                   *Please ensure to include your name (same as the information above in the Delivery Details). We will bake your order once payment is verified.
