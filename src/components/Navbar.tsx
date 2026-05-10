@@ -18,13 +18,13 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background-light/80 backdrop-blur-md border-b border-primary/20 transition-all">
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-8 h-8 text-primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-              <path d="M15 15a4 4 0 0 1-5.14 0M12 12v3M9 10c0-1.65 1.35-3 3-3s3 1.35 3 3M4 10c0-1.65 1.35-3 3-3M17 10c0-1.65 1.35-3 3-3M4 10h16M4 10v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10" />
-            </svg>
-          </div>
+        <Link to="/" className="flex items-center gap-2 group">
+          <img 
+            src="https://lh3.googleusercontent.com/d/1FYeNAcPifDunkvz7YnzqrA0YcvUjUyC7" 
+            alt="Stay Baked Sourdough" 
+            className="h-12 w-auto object-contain rounded-lg"
+            referrerPolicy="no-referrer"
+          />
           <h1 className="text-xl font-bold tracking-tight text-slate-900 group-hover:text-primary transition-colors">Stay Baked Sourdough</h1>
         </Link>
 

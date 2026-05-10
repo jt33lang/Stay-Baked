@@ -39,12 +39,13 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Branding */}
         <div className="flex flex-col gap-6">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 text-primary">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-                <path d="M15 15a4 4 0 0 1-5.14 0M12 12v3M9 10c0-1.65 1.35-3 3-3s3 1.35 3 3M4 10c0-1.65 1.35-3 3-3M17 10c0-1.65 1.35-3 3-3M4 10h16M4 10v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10" />
-              </svg>
-            </div>
+          <Link to="/" className="flex items-center gap-2">
+            <img 
+              src="https://lh3.googleusercontent.com/d/1FYeNAcPifDunkvz7YnzqrA0YcvUjUyC7" 
+              alt="Stay Baked Sourdough" 
+              className="h-14 w-auto object-contain brightness-110 rounded-lg"
+              referrerPolicy="no-referrer"
+            />
             <h2 className="text-xl font-bold text-primary">Stay Baked Sourdough</h2>
           </Link>
           <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
