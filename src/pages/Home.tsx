@@ -149,29 +149,31 @@ export default function Home() {
           <p className="text-slate-600 text-lg">We cut out retail markups and industrial overhead to bring you better bread for less.</p>
         </div>
         <div className="bg-white rounded-3xl border border-primary/20 shadow-xl overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-primary/10">
-                <th className="p-8 font-bold uppercase tracking-wider text-sm">Feature</th>
-                <th className="p-8 font-bold uppercase tracking-wider text-sm text-primary">Our Home-Baked</th>
-                <th className="p-8 font-bold uppercase tracking-wider text-sm">Store Prices</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-primary/5">
-              {[
-                { label: 'Quality', ours: '100% Organic & Wild Yeast', store: 'Commercial Yeast & Additives' },
-                { label: 'Price per Loaf', ours: '$8.50 (delivery included)', store: '$18.00 - 25.00' },
-                { label: 'Freshness', ours: 'Baked to Order Today', store: '2-5 Days Old' },
-                { label: 'Preparation', ours: '24h Cold Fermentation', store: 'Rapid 2h Rise' },
-              ].map((row, i) => (
-                <tr key={i} className="hover:bg-primary/5 transition-colors">
-                  <td className="p-8 font-bold text-slate-800">{row.label}</td>
-                  <td className="p-8 font-bold text-primary">{row.ours}</td>
-                  <td className="p-8 text-slate-500">{row.store}</td>
+          <div className="overflow-x-auto w-full">
+            <table className="w-full text-left border-collapse min-w-[600px]">
+              <thead>
+                <tr className="bg-primary/10">
+                  <th className="p-4 md:p-8 font-bold uppercase tracking-wider text-xs md:text-sm">Feature</th>
+                  <th className="p-4 md:p-8 font-bold uppercase tracking-wider text-xs md:text-sm text-primary">Our Home-Baked</th>
+                  <th className="p-4 md:p-8 font-bold uppercase tracking-wider text-xs md:text-sm">Store Prices</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-primary/5">
+                {[
+                  { label: 'Quality', ours: '100% Organic & Wild Yeast', store: 'Commercial Yeast & Additives' },
+                  { label: 'Price per Loaf', ours: '$8.50 (delivery included)', store: '$18.00 - 25.00' },
+                  { label: 'Freshness', ours: 'Baked to Order Today', store: '2-5 Days Old' },
+                  { label: 'Preparation', ours: '24h Cold Fermentation', store: 'Rapid 2h Rise' },
+                ].map((row, i) => (
+                  <tr key={i} className="hover:bg-primary/5 transition-colors">
+                    <td className="p-4 md:p-8 font-bold text-slate-800 text-sm md:text-base">{row.label}</td>
+                    <td className="p-4 md:p-8 font-bold text-primary text-sm md:text-base">{row.ours}</td>
+                    <td className="p-4 md:p-8 text-slate-500 text-sm md:text-base">{row.store}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
     </div>
